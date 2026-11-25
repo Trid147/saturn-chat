@@ -1,4 +1,4 @@
-# 🪐 Saturn Chat (v1.3)
+# 🪐 Saturn Chat (v1.4)
 
 Saturn Chat is a production-grade, lightweight, asynchronous, and hyper-anonymous console-based messenger built using Python's native `socket` and `threading` libraries. 
 
@@ -67,15 +67,6 @@ Upon connecting, use single-line layouts to pass through state validations:
 
 ---
 
-## 🗺️ Roadmap (Upcoming Features)
-
-Saturn Chat is actively evolving into a fully featured, decentralized local messenger. The following features are planned for future releases:
-
-* [x] **Stage 6: Private Messaging (`/w`)** — Implement a custom routing mechanism using socket-to-username mapping dictionaries to allow secure private whispers between users.
-* [x] **Stage 7: Password Management** — Add secure runtime options for users to update or reset their volatile session passwords.
-* [x] **Stage 8: Private Rooms & Channels** — Introduce multi-room capabilities allowing users to create and join isolated chat segments.
-* [x] **Stage 9: End-to-End Encryption (E2EE)** — Integrate asymmetric cryptography (RSA/AES) so that messages are encrypted on the client side. The server will only route encrypted bytes, making it impossible for the host to spy on conversations.
-* [x] **Stage 10: Decentralized Hosting (Tor/WireGuard)** — Document and configure alternative routing paths via Tor Onion Services and Tailscale to eliminate the need for a public/static IP.
 
 ## 📄 License
 This project is licensed under the MIT License - see the main repository for details.
