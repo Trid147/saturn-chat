@@ -7,7 +7,7 @@ import base64
 import socks
 from cryptography.fernet import Fernet
 
-SERVER_ONION = 'libuak4rdz6mkkwghs3svwuw3u5fvfbfhtdvc2dearod6mov5ej4q4yd.onion' #your server onion adress
+SERVER_ONION = '' #your server onion adress
 PORT = 5731
 
 def make_crypto_object(room_code: str) -> Fernet:
@@ -74,7 +74,7 @@ def receive_messages(client_socket):
 def main():
     global current_room, current_crypto
 
-    socks.set_default_proxy(socks.SOCKS5, '127.0.0.1', 9150)
+    #socks.set_default_proxy(socks.SOCKS5, '127.0.0.1', 9150)
 
     socket.socket = socks.socksocket
 
