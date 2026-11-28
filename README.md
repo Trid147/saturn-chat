@@ -1,6 +1,6 @@
 # 🪐 Saturn Chat (v1.4)
 
-Saturn Chat is a production-grade, lightweight, asynchronous, and hyper-anonymous console-based messenger built using Python's native `socket` and `threading` libraries. 
+Saturn Chat is a production-grade, lightweight, multi-threaded, and hyper-anonymous console-based messenger built using Python's native `socket` and `threading` libraries. 
 
 Moving far beyond simple local networks, it now operates as a globally accessible darknet platform featuring mandatory **End-to-End Encryption (E2EE)** and **Tor Onion Hidden Services** integration. It enables secure, decentralized communication anywhere in the world without a public/static IP or port forwarding.
 
@@ -8,7 +8,7 @@ Moving far beyond simple local networks, it now operates as a globally accessibl
 * **Multi-threaded Room Routing:** Smoothly handles multiple concurrent clients split across dynamic, password-protected chat rooms using Python's `threading` module and fine-grained `Lock` state synchronization.
 * **Pure End-to-End Encryption (E2EE):** All chat room messages are encrypted on the client side using the **AES-256 (Fernet)** symmetric encryption standard derived from room codes. The server only handles, broadcasts, and logs encrypted base64 byte streams, making host-side conversation spying mathematically impossible.
 * **Socks5 Tor Routing (NAT Traversal):** Built-in support for global connections via Tor Onion Hidden Services (`.onion`), allowing the server to safely accept worldwide traffic from behind strict household firewalls and residential routers.
-* **On-the-Fly Dynamic Registry:** Accounts are stored in a volatile, secure in-memory dictionary. Shutting down the server completely wipes the user registry, leaving zero digital footprints on the server's hard drive.
+* **On-the-Fly Dynamic Registry:** Accounts are stored in a volatile, secure in-memory dictionary. Shutting down the client app completely wipes the user registry, leaving zero digital footprints on the hard drive.
 * **Secure Cryptographic Hashing:** User passwords and room master keys are heavily protected using the native `SHA-256` hash function.
 * **Robust Packet Reassembly:** Features a smart data stream slicer (`.split('\n')`) on the client side to mitigate TCP packet concatenation bugs, ensuring persistent chat histories decrypt perfectly regardless of network latency.
 * **Anti-Overlapping Terminal UI:** Uses advanced ANSI escape codes (`\r\033[K`) to dynamically wipe the prompt line, ensuring incoming background packets never disrupt active user terminal inputs.
@@ -24,7 +24,10 @@ pip install cryptography PySocks
 ## 🛠️ Installation & Usage
 
 ### 1. Host Server Configuration
-Deploy `server.py` on your host machine (e.g., an Ubuntu Server laptop).
+Fire up compose.yml:
+   ```bash
+   docker-compose up
+   ```
 
 #### To expose the server to the Global Tor Network (Optional):
 1. Install Tor: `sudo apt install tor -y`
@@ -37,16 +40,12 @@ Deploy `server.py` on your host machine (e.g., an Ubuntu Server laptop).
    ```bash
    sudo cat /var/lib/tor/saturn_chat/hostname
    ```
-4. Fire up your script:
-   ```bash
-   python3 server.py
-   ```
 
 ### 2. Client Connection Mode
 Configure your target connection endpoints inside `client.py`:
 
 #### Option A: Local Network Mode (Wi-Fi)
-Set `SERVER_IP` to your server's local address (e.g., `192.168.0.109`) and execute:
+Set `SERVER_IP` to your server's local address or write it into `onion.txt` and execute:
 ```bash
 python3 client.py
 ```

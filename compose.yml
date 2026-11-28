@@ -6,7 +6,7 @@ services:
     ports:
       - 127.0.0.1:5731:5731
     volumes:
-      - ./core/database.json:/app/database.json
-      - ./core/messages_history.jsonl:/app/messages_history.jsonl
-      - ./core/rooms.json:/app/rooms.json
-      - ./core/room_histories:/app/room_histories
+      - saturn-data:/app/data
+
+volumes:
+  saturn-data:

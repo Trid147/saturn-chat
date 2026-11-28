@@ -1,21 +1,23 @@
-import socket
-import threading
 import hashlib
 import json
+import socket
+import threading
 import time
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 HOST = ''
 PORT = 5731
 
 # file system
 server_dir = Path(__file__).parent
-room_histories_dir = server_dir / 'room_histories'
-database = server_dir / 'database.json'
-messages_history = server_dir / 'messages_history.jsonl'
-rooms = server_dir / 'rooms.json'
+data_dir = server_dir / 'data'
+data_dir.mkdir(exist_ok=True)
 
+room_histories_dir = data_dir / 'room_histories'
+database = data_dir / 'database.json'
+messages_history = data_dir / 'messages_history.jsonl'
+rooms = data_dir / 'rooms.json'
 room_histories_dir.mkdir(exist_ok=True)
 
 clients = []
@@ -63,7 +65,7 @@ def process_command(client, username, command, args):
             if active_users.get(target_user):
                 target_socket = active_users.get(target_user)
                 formatted_message = f'PM from {username}: {private_message}\n'
-                target_socket.sendall(formatted_message.encode('utf-8'))
+                target_socket.sendall(formatted_message.encode('utf-8')) #type: ignore
             else:
                 client.sendall(error_message.encode('utf-8'))
         else:

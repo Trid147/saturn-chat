@@ -1,14 +1,39 @@
 #!/usr/bin/env python3
-import socket
-import threading
-import sys
-import hashlib
 import base64
+import hashlib
+import socket
+import sys
+import threading
+
 import socks
 from cryptography.fernet import Fernet
+from pathlib import Path
 
+ONION_FILE = Path(__file__).resolve().parent / 'onion.txt'
 SERVER_ONION = '' #your server onion adress
 PORT = 5731
+
+def resolve_server_onion(hardcoded_onion: str = '') -> str:
+    if hardcoded_onion.strip():
+        return hardcoded_onion.strip()
+
+    if ONION_FILE.exists():
+        address = ONION_FILE.read_text(encoding='utf-8').strip()
+        if address:
+            return address
+
+    address = ''
+    while not address:
+        address = input('No server address attached.\nPaste your server address: ').strip()
+    ONION_FILE.write_text(address + '\n', encoding='utf-8')
+    return address
+
+def get_tor_port() -> int:
+    try:
+        with socket.create_connection(('127.0.0.1',9050), timeout=0.5):
+            return 9050
+    except OSError:
+        return 9150
 
 def make_crypto_object(room_code: str) -> Fernet:
     '''creates fernet crypto object'''
@@ -74,7 +99,11 @@ def receive_messages(client_socket):
 def main():
     global current_room, current_crypto
 
-    #socks.set_default_proxy(socks.SOCKS5, '127.0.0.1', 9150)
+    tor_port = get_tor_port()
+
+    socks.set_default_proxy(socks.SOCKS5, '127.0.0.1', tor_port)
+
+    server = resolve_server_onion(SERVER_ONION)
 
     socket.socket = socks.socksocket
 
@@ -82,7 +111,7 @@ def main():
 
     try:
         print('Connection to Saturn Chat via Tor network... Please, wait...')
-        client.connect((SERVER_ONION,PORT))
+        client.connect((server,PORT))
     except Exception as e:
         print(f'Could not connect to server: {e}')
         print('Make sure you are connect to the Tor Network!')
