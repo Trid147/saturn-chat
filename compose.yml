@@ -1,6 +1,6 @@
 services:
   saturn-chat:
-    build: .
+    image: ghcr.io/trid147/saturn-chat:latest
     container_name: saturn-chat
     restart: unless-stopped
     ports:
