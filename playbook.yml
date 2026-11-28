@@ -1,0 +1,55 @@
+---
+- name: Deploy Saturn Chat
+  hosts: ubuntu_server
+  become: true
+
+  tasks:
+    - name: Install Podman, podman-compose and Tor
+      ansible.builtin.apt:
+        name:
+          - podman
+          - podman-compose
+          - tor
+        state: present
+        update_cache: yes
+
+    - name: Ensure Tor service is started and enabled
+      ansible.builtin.service:
+        name: tor
+        state: started
+        enabled: true
+      
+    - name: Create project folder
+      file:
+        path: /root/saturn-chat
+        state: directory
+
+    - name: Copy compose.yml to the server
+      copy:
+        src: compose.yml
+        dest: /root/saturn-chat/compose.yml
+    
+    - name: Pull latest version from GitHub
+      command:
+        cmd: podman-compose pull
+        chdir: /root/saturn-chat
+    
+    - name: Start Container with podman-compose
+      command:
+        cmd: podman-compose up -d --force-recreate
+        chdir: /root/saturn-chat
+
+    - name: Configure Tor hidden service
+      blockinfile:
+        path: /etc/tor/torrc
+        marker: "# {mark} ANSIBLE MANAGED SATURN CHAT"
+        block: |
+          HiddenServiceDir /var/lib/tor/saturn_chat/
+          HiddenServicePort 5731 127.0.0.1:5731
+      notify: Restart Tor
+
+  handlers:
+    - name: Restart Tor
+      ansible.builtin.service:
+        name: tor
+        state: restarted
